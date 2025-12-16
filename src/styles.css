@@ -1,0 +1,55 @@
+:root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+body { margin: 0; background: #fff; color: #111; }
+a { color: inherit; }
+
+.topbar{
+  position: sticky; top: 0; z-index: 10;
+  display:flex; gap:10px; align-items:center;
+  padding: 10px 12px; border-bottom:1px solid #ddd; background:#fff;
+}
+.brand{ font-weight:700; margin-right: 8px; }
+.navbtn{
+  border:1px solid #ddd; background:#fff; padding:8px 10px; border-radius:10px;
+}
+.navbtn.active{ border-color:#111; }
+.container{ padding: 12px; max-width: 1000px; margin: 0 auto; }
+
+.grid{ display:grid; grid-template-columns: 1fr; gap:10px; }
+.card{
+  border:1px solid #ddd; border-radius:14px; padding: 10px 12px; background:#fff;
+}
+.card .meta{ opacity:.75; font-size: 14px; }
+.badge{ display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:700; }
+.badge.new{ background:#c62828; color:#fff; }
+.badge.saved{ background:#2e7d32; color:#fff; }
+.badge.dup{ background:#fff; border:1px dashed #000; }
+
+.modalOverlay{
+  position: fixed; inset:0; background: rgba(0,0,0,.4);
+  display:flex; align-items:center; justify-content:center; padding: 14px;
+  z-index: 100;
+}
+.modal{
+  width:min(920px, 100%); max-height: min(90vh, 900px);
+  background:#fff; border-radius:16px; overflow:hidden;
+  display:flex; flex-direction:column;
+}
+.modalHeader{
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 10px 12px; border-bottom:1px solid #eee;
+}
+.modalTitle{ font-weight:800; }
+.closeBtn{
+  border:1px solid #ddd; background:#fff; border-radius:12px;
+  width:36px; height:36px; font-size:18px;
+}
+.modalBody{ padding: 12px; overflow:auto; }
+.linkrow{ display:flex; gap:10px; flex-wrap:wrap; margin: 8px 0 10px; }
+.linkrow a{ border:1px solid #ddd; padding:6px 10px; border-radius:10px; text-decoration:none; }
+pre#body{ white-space: pre-wrap; overflow-wrap:anywhere; word-break:break-word; margin:0; }
+.hint{ opacity:.7; padding: 18px 0; }
+.kpiRow{ display:flex; gap:10px; flex-wrap:wrap; }
+.kpi{ border:1px solid #ddd; border-radius:14px; padding:10px 12px; min-width: 160px; }
+.kpi .num{ font-size:24px; font-weight:900; }
+.small{ opacity:.75; font-size: 13px; }
+textarea{ width:100%; min-height: 180px; }
