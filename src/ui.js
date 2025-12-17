@@ -15,19 +15,22 @@ export function renderApp(root) {
   const view = root.querySelector("#view");
   const modalHost = root.querySelector("#modalHost");
 
-  const setRoute = (route) => {
-    root.querySelectorAll(".navbtn").forEach(b => b.classList.toggle("active", b.dataset.route===route));
-    if (route === "home") renderHome(view);
-    if (route === "load") renderLoad(view);
-    if (route === "jobs") renderJobs(view, modalHost);
-  };
+  const setRoute = async (route) => {
+  root.querySelectorAll(".navbtn").forEach(b =>
+  b.onclick = () => setRoute(b.dataset.route).catch(console.error)
+  );
+
+  if (route === "home") await renderHome(view);
+  if (route === "load") await renderLoad(view, setRoute);
+  if (route === "jobs") await renderJobs(view, modalHost);
+};
 
   root.querySelectorAll(".navbtn").forEach(b => b.onclick = ()=>setRoute(b.dataset.route));
-  setRoute("home");
+  setRoute("home").catch(console.error);
 }
 
-function renderHome(view) {
-  const { jobs } = listJobs();
+async function renderHome(view) {
+  const { jobs = [] } = await listJobs();   // <-- await + default []
   const saved = jobs.filter(j=>j && !j.duplicateOf).length;
   const dup = jobs.filter(j=>j && j.duplicateOf).length;
   view.innerHTML = `
@@ -41,7 +44,7 @@ function renderHome(view) {
   `;
 }
 
-function renderLoad(view) {
+async function renderLoad(view, setRoute) {
   view.innerHTML = `
     <h2 style="margin:0 0 10px 0">Lataa työpaikkoja</h2>
     <div class="card">
@@ -65,19 +68,20 @@ function renderLoad(view) {
     try { await navigator.clipboard.writeText(txt); msg.textContent += " Kopioitu leikepöydälle."; } catch {}
   };
 
-  view.querySelector("#importBtn").onclick = () => {
-    try {
-      const parsed = JSON.parse(area.value || "");
-      upsertMany(parsed);
-      msg.textContent = "Import OK.";
-    } catch (e) {
-      msg.textContent = "Import epäonnistui: " + (e?.message || e);
-    }
-  };
+  view.querySelector("#importBtn").onclick = async () => {
+  try {
+    const parsed = JSON.parse(area.value || "");
+    await upsertMany(parsed);
+    msg.textContent = "Import OK.";
+    await setRoute("home");
+  } catch (e) {
+    msg.textContent = "Import epäonnistui: " + (e?.message || e);
+  }
+};
 }
 
-function renderJobs(view, modalHost) {
-  const { byId, jobs } = listJobs();
+async function renderJobs(view, modalHost) {
+  const { byId, jobs } = await listJobs();
 
   view.innerHTML = `
     <h2 style="margin:0 0 10px 0">Lista työpaikoista</h2>
