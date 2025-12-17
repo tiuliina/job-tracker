@@ -15,22 +15,19 @@ export function renderApp(root) {
   const view = root.querySelector("#view");
   const modalHost = root.querySelector("#modalHost");
 
-  const setRoute = async (route) => {
-  root.querySelectorAll(".navbtn").forEach(b =>
-  b.onclick = () => setRoute(b.dataset.route).catch(console.error)
-  );
-
-  if (route === "home") await renderHome(view);
-  if (route === "load") await renderLoad(view, setRoute);
-  if (route === "jobs") await renderJobs(view, modalHost);
-};
+  const setRoute = (route) => {
+    root.querySelectorAll(".navbtn").forEach(b => b.classList.toggle("active", b.dataset.route===route));
+    if (route === "home") renderHome(view);
+    if (route === "load") renderLoad(view);
+    if (route === "jobs") renderJobs(view, modalHost);
+  };
 
   root.querySelectorAll(".navbtn").forEach(b => b.onclick = ()=>setRoute(b.dataset.route));
-  setRoute("home").catch(console.error);
+  setRoute("home");
 }
 
 async function renderHome(view) {
-  const { jobs = [] } = await listJobs();   // <-- await + default []
+  const { jobs } = listJobs();
   const saved = jobs.filter(j=>j && !j.duplicateOf).length;
   const dup = jobs.filter(j=>j && j.duplicateOf).length;
   view.innerHTML = `
@@ -44,7 +41,7 @@ async function renderHome(view) {
   `;
 }
 
-async function renderLoad(view, setRoute) {
+function renderLoad(view) {
   view.innerHTML = `
     <h2 style="margin:0 0 10px 0">Lataa työpaikkoja</h2>
     <div class="card">
@@ -73,15 +70,15 @@ async function renderLoad(view, setRoute) {
     const parsed = JSON.parse(area.value || "");
     await upsertMany(parsed);
     msg.textContent = "Import OK.";
-    await setRoute("home");
+    await renderHome();
   } catch (e) {
     msg.textContent = "Import epäonnistui: " + (e?.message || e);
   }
 };
 }
 
-async function renderJobs(view, modalHost) {
-  const { byId, jobs } = await listJobs();
+function renderJobs(view, modalHost) {
+  const { byId, jobs } = listJobs();
 
   view.innerHTML = `
     <h2 style="margin:0 0 10px 0">Lista työpaikoista</h2>

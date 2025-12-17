@@ -1,4 +1,5 @@
 
+import { listJobs } from "./db.js";
 import { renderApp } from "./ui.js";
 
 function ensureAppEl() {
@@ -22,7 +23,7 @@ try {
 
 async function loadJobs() {
   const res = await fetch("http://localhost:3000/jobs");
-  const jobs = await res.json();
+  const jobs = await listJobs();
 
   const el = document.getElementById("jobs");
   el.innerHTML = jobs.map(j => `
