@@ -2,8 +2,8 @@ import fs from "fs";
 import path from "path";
 import Database from "better-sqlite3";
 
-const DB_PATH = path.resolve("backend/db/jobtracker.db");
-const SCHEMA_PATH = path.resolve("backend/db/schema.sql");
+const DB_PATH = path.resolve("db/jobtracker.db");
+const SCHEMA_PATH = path.resolve("db/schema.sql");
 
 export function initDb() {
   fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
