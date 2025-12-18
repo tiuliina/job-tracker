@@ -81,30 +81,30 @@ async function generateBookmarkletKey(view) {
   try {
     out.textContent = "Luodaan avainta…";
 
-    // A) varmista kirjautunut käyttäjä
+    // 1️⃣ Varmista, että käyttäjä on oikeasti kirjautunut
     const { data: userRes, error: userErr } = await supabase.auth.getUser();
     if (userErr) throw userErr;
 
     const user = userRes?.user;
     if (!user) throw new Error("Et ole kirjautunut sisään.");
 
-    // B) generoi SELKOKIELINEN token
-    const token = randomToken();          // ← tämä menee bookmarklettiin
+    // 2️⃣ Generoi selkokielinen token
+    const token = randomToken();
 
-    // C) hashää token tallennusta varten
+    // 3️⃣ Hashää token tietokantaa varten
     const token_hash = await sha256Hex(token);
 
-    // D) tallenna hash + user_id Supabaseen
+    // 4️⃣ INSERT Supabaseen (TÄMÄ oli se puuttuva kohta)
     const { error } = await supabase
       .from("api_keys")
       .insert([{
-        user_id: user.id,                 // ⚠️ pakollinen RLS:lle
+        user_id: user.id,   // 🔴 tämä on pakollinen RLS:lle
         token_hash
       }]);
 
     if (error) throw error;
 
-    // E) näytä token käyttäjälle (AINOA kerta)
+    // 5️⃣ Näytä token käyttäjälle (vain kerran)
     out.textContent =
       "Tässä bookmarklet-avain (näkyy vain nyt). Kopioi talteen:\n\n" + token;
 
