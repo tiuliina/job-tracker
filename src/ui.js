@@ -30,9 +30,18 @@ export function renderApp(root) {
 }
 
 async function renderHome(view) {
-  const { jobs = [] } = await listJobs();   // <-- await + default []
-  const saved = jobs.filter(j=>j && !j.duplicateOf).length;
-  const dup = jobs.filter(j=>j && j.duplicateOf).length;
+  let jobs = [];
+  try {
+    const res = await listJobs();         // res voi olla {jobs:[...]} tai pelkkä [...]
+    jobs = Array.isArray(res) ? res : (res?.jobs || []);
+  } catch (e) {
+    console.error("listJobs failed:", e);
+    jobs = [];
+  }
+
+  const saved = jobs.filter(j => j && !j.duplicateOf).length;
+  const dup   = jobs.filter(j => j &&  j.duplicateOf).length;
+
   view.innerHTML = `
     <h2 style="margin:0 0 10px 0">Tilastot</h2>
     <div class="kpiRow">
@@ -40,10 +49,16 @@ async function renderHome(view) {
       <div class="kpi"><div class="num">${saved}</div><div class="small">Tallennetut</div></div>
       <div class="kpi"><div class="num">${dup}</div><div class="small">Duplikaatit</div></div>
     </div>
+
     <div class="hint">Vinkki: “Lista työpaikoista” → klikkaa työpaikkaa → aukeaa popup.</div>
-    <button id="jt-gen-key">Luo bookmarklet-avain</button>
-<pre id="jt-key-out"></pre>
+
+    <button id="jt-gen-key" type="button">Luo bookmarklet-avain</button>
+    <pre id="jt-key-out"></pre>
   `;
+
+  // ⚠️ TÄRKEÄ: kiinnitä click handler vasta innerHTML:n jälkeen
+  const btn = document.getElementById("jt-gen-key");
+  if (btn) btn.onclick = generateBookmarkletKey; // tämä funktio pitää olla olemassa
 }
 
 async function sha256Hex(str) {
@@ -59,8 +74,7 @@ function randomToken() {
   return [...a].map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
-document.getElementById("jt-gen-key").onclick = async () => {
-  // oletetaan että käyttäjä on kirjautunut Supabase Authilla tähän Pages-sivuun
+async function generateBookmarkletKey() {
   const token = randomToken();
   const token_hash = await sha256Hex(token);
 
@@ -76,7 +90,7 @@ document.getElementById("jt-gen-key").onclick = async () => {
 
   out.textContent =
     "Tässä bookmarklet-avain (näkyy vain nyt). Kopioi talteen:\n\n" + token;
-};
+}
 
 async function renderLoad(view, setRoute) {
   view.innerHTML = `
