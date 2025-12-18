@@ -59,7 +59,7 @@ async function renderHome(view) {
 
   // ⚠️ TÄRKEÄ: kiinnitä click handler vasta innerHTML:n jälkeen
   const btn = document.getElementById("jt-gen-key");
-  if (btn) btn.onclick = generateBookmarkletKey; // tämä funktio pitää olla olemassa
+  if (btn) btn.onclick = generateBookmarkletKey(view); // tämä funktio pitää olla olemassa
 }
 
 async function sha256Hex(str) {
