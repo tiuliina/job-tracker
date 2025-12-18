@@ -42,7 +42,7 @@ const user = userRes?.user;
 if (!user) return { jobs: [], byId: {} };
   const { data, error } = await supabase
     .from("jobs")
-    .select("user_id,url,title,company,location,body_text,desc_hash,duplicate_of,updated_at,created_at")
+    .select("user_id,url,title,company,location,body_text,desc_hash,updated_at,created_at")
     .order("updated_at", { ascending: false })
     .limit(500)
     .eq("user_id", user.id);
@@ -57,7 +57,7 @@ if (!user) return { jobs: [], byId: {} };
     location: r.location,
     bodyText: r.body_text,     // muunnos appin käyttämään nimeen
     descHash: r.desc_hash,
-    duplicateOf: r.duplicate_of || null,
+    duplicateOf: null,
     updatedAt: r.updated_at,
     createdAt: r.created_at,
     userId: r.user_id,
