@@ -10,6 +10,7 @@
   <input id="email" placeholder="email" style="padding:8px;width:280px" />
   <button id="login" style="padding:8px 12px">Send login link</button>
   <div id="msg" style="margin-top:12px"></div>
+  <button onclick="showAndCopyToken()">Copy token</button>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -23,6 +24,21 @@
       const p = new URLSearchParams(h);
       return { access_token: p.get("access_token"), refresh_token: p.get("refresh_token") };
     }
+
+    async function showAndCopyToken() {
+        const { data } = await client.auth.getSession();
+        const s = data?.session;
+        if (!s) { msg("Ei sessiota."); return; }
+
+        const payload = JSON.stringify({
+            access_token: s.access_token,
+            user_id: s.user.id,
+            expires_at: s.expires_at
+        });
+
+        await navigator.clipboard.writeText(payload);
+        msg("Token kopioitu leikepöydälle ✅ Palaa sivulle ja paina Tallenna.");
+        }
 
     async function sendSessionToOpener() {
       const { access_token, refresh_token } = parseHash();
