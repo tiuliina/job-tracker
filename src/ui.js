@@ -1,5 +1,7 @@
 import { listJobs, exportJson, upsertMany } from "./db.js";
 
+const supabase = createClient(https://zbnpdljtffddfymhxumx.supabase.co, eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpibnBkbGp0ZmZkZGZ5bWh4dW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwMzIxNDAsImV4cCI6MjA4MTYwODE0MH0.4LThsV6kp_CI9m7zlxORFHPW5IANiPLtR1O_TkrXmdE)
+
 export function renderApp(root) {
   root.innerHTML = `
     <div class="topbar">
@@ -16,16 +18,15 @@ export function renderApp(root) {
   const modalHost = root.querySelector("#modalHost");
 
   const setRoute = async (route) => {
-  root.querySelectorAll(".navbtn").forEach(b =>
-  b.onclick = () => setRoute(b.dataset.route).catch(console.error)
-  );
-
-  if (route === "home") await renderHome(view);
-  if (route === "load") await renderLoad(view, setRoute);
-  if (route === "jobs") await renderJobs(view, modalHost);
+  if (route === "home") return renderHome(view);
+  if (route === "load") return renderLoad(view, setRoute);
+  if (route === "jobs") return renderJobs(view, modalHost);
 };
 
-  root.querySelectorAll(".navbtn").forEach(b => b.onclick = ()=>setRoute(b.dataset.route));
+root.querySelectorAll(".navbtn").forEach(b => {
+  b.onclick = () => setRoute(b.dataset.route).catch(console.error);
+});
+
   setRoute("home").catch(console.error);
 }
 
