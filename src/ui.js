@@ -1,6 +1,5 @@
 import { listJobs, exportJson, upsertMany } from "./db.js";
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-const supabase = createClient("https://zbnpdljtffddfymhxumx.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpibnBkbGp0ZmZkZGZ5bWh4dW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwMzIxNDAsImV4cCI6MjA4MTYwODE0MH0.4LThsV6kp_CI9m7zlxORFHPW5IANiPLtR1O_TkrXmdE")
+import { supabase } from "./supabaseClient.js";
 
 export function renderApp(root) {
   root.innerHTML = `
@@ -31,6 +30,8 @@ root.querySelectorAll(".navbtn").forEach(b => {
 }
 
 async function renderHome(view) {
+  const { data: userRes } = await supabase.auth.getUser();
+  const user = userRes?.user;
   let jobs = [];
   try {
     const res = await listJobs();         // res voi olla {jobs:[...]} tai pelkkä [...]
@@ -50,6 +51,9 @@ async function renderHome(view) {
       <div class="kpi"><div class="num">${saved}</div><div class="small">Tallennetut</div></div>
       <div class="kpi"><div class="num">${dup}</div><div class="small">Duplikaatit</div></div>
     </div>
+    <div class="small">
+    ${user ? `Kirjautunut: ${escapeHtml(user.email || user.id)}` : `Et ole kirjautunut sisään → et näe pilvidataa.`}
+  </div>
 
     <div class="hint">Vinkki: “Lista työpaikoista” → klikkaa työpaikkaa → aukeaa popup.</div>
 
