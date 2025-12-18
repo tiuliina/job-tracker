@@ -155,7 +155,19 @@ async function renderLoad(view, setRoute) {
 }
 
 async function renderJobs(view, modalHost) {
-  const { byId, jobs } = await listJobs();
+  let byId = {}, jobs = [];
+  try {
+    const res = await listJobs();
+    byId = res?.byId || {};
+    jobs = res?.jobs || [];
+  } catch (e) {
+    view.innerHTML = `<pre style="white-space:pre-wrap">
+listJobs() kaatui:
+${e?.message || e}
+${e?.stack || ""}
+</pre>`;
+    return;
+  }
 
   view.innerHTML = `
     <h2 style="margin:0 0 10px 0">Lista työpaikoista</h2>
@@ -177,7 +189,7 @@ async function renderJobs(view, modalHost) {
         </div>
       </div>
     `;
-  }).join("") || `<div class="hint">Ei työpaikkoja. Mene “Lataa työpaikkoja”.</div>`;
+  }).join("") || `<div class="hint">Ei työpaikkoja.</div>`;
 
   list.querySelectorAll("[data-id]").forEach(el => {
     el.onclick = () => openModal(modalHost, byId[el.dataset.id], byId);
