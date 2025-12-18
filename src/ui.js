@@ -75,22 +75,43 @@ function randomToken() {
   return [...a].map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
-async function generateBookmarkletKey() {
-  const token = randomToken();
-  const token_hash = await sha256Hex(token);
+async function generateBookmarkletKey(view) {
+  const out = view.querySelector("#jt-key-out");
 
-  const { error } = await supabase
-    .from("api_keys")
-    .insert([{ token_hash }]);
+  try {
+    out.textContent = "Luodaan avainta…";
 
-  const out = document.getElementById("jt-key-out");
-  if (error) {
-    out.textContent = "Virhe: " + error.message;
-    return;
+    // A) varmista kirjautunut käyttäjä
+    const { data: userRes, error: userErr } = await supabase.auth.getUser();
+    if (userErr) throw userErr;
+
+    const user = userRes?.user;
+    if (!user) throw new Error("Et ole kirjautunut sisään.");
+
+    // B) generoi SELKOKIELINEN token
+    const token = randomToken();          // ← tämä menee bookmarklettiin
+
+    // C) hashää token tallennusta varten
+    const token_hash = await sha256Hex(token);
+
+    // D) tallenna hash + user_id Supabaseen
+    const { error } = await supabase
+      .from("api_keys")
+      .insert([{
+        user_id: user.id,                 // ⚠️ pakollinen RLS:lle
+        token_hash
+      }]);
+
+    if (error) throw error;
+
+    // E) näytä token käyttäjälle (AINOA kerta)
+    out.textContent =
+      "Tässä bookmarklet-avain (näkyy vain nyt). Kopioi talteen:\n\n" + token;
+
+  } catch (e) {
+    console.error(e);
+    out.textContent = "Virhe: " + (e.message || e);
   }
-
-  out.textContent =
-    "Tässä bookmarklet-avain (näkyy vain nyt). Kopioi talteen:\n\n" + token;
 }
 
 async function renderLoad(view, setRoute) {
