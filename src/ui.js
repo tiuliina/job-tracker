@@ -22,7 +22,7 @@ export function renderApp(root) {
   if (route === "jobs") return renderJobs(view, modalHost);
 };
 
-root.querySelectorAll(".navbtn").forEach(b => {
+root.querySelectorAll(".navbtn[data-route]").forEach(b => {
   b.onclick = () => setRoute(b.dataset.route).catch(console.error);
 });
 
@@ -125,8 +125,8 @@ async function renderLoad(view, setRoute) {
       <div class="small">Liitä tähän exportattu JSON (tai koko localStorage-objekti) ja paina Import.</div>
       <textarea id="importArea" placeholder='{"id": {...}} tai [{"id":"..."}]'></textarea>
       <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
-        <button class="navbtn" id="importBtn">Import</button>
-        <button class="navbtn" id="exportBtn">Export (kopioi)</button>
+        <button id="importBtn">Import</button>
+        <button id="exportBtn">Export (kopioi)</button>
       </div>
       <div class="small" id="msg" style="margin-top:8px;"></div>
     </div>
