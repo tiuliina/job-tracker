@@ -41,8 +41,42 @@ async function renderHome(view) {
       <div class="kpi"><div class="num">${dup}</div><div class="small">Duplikaatit</div></div>
     </div>
     <div class="hint">Vinkki: “Lista työpaikoista” → klikkaa työpaikkaa → aukeaa popup.</div>
+    <button id="jt-gen-key">Luo bookmarklet-avain</button>
+<pre id="jt-key-out"></pre>
   `;
 }
+
+async function sha256Hex(str) {
+  const data = new TextEncoder().encode(str);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function randomToken() {
+  // 32 bytes -> 64 hex chars
+  const a = new Uint8Array(32);
+  crypto.getRandomValues(a);
+  return [...a].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+document.getElementById("jt-gen-key").onclick = async () => {
+  // oletetaan että käyttäjä on kirjautunut Supabase Authilla tähän Pages-sivuun
+  const token = randomToken();
+  const token_hash = await sha256Hex(token);
+
+  const { error } = await supabase
+    .from("api_keys")
+    .insert([{ token_hash }]);
+
+  const out = document.getElementById("jt-key-out");
+  if (error) {
+    out.textContent = "Virhe: " + error.message;
+    return;
+  }
+
+  out.textContent =
+    "Tässä bookmarklet-avain (näkyy vain nyt). Kopioi talteen:\n\n" + token;
+};
 
 async function renderLoad(view, setRoute) {
   view.innerHTML = `
