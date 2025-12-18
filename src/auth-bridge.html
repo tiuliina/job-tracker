@@ -71,7 +71,7 @@
       msg("Sending link…");
       const { error } = await client.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: location.origin + location.pathname }
+        options: { emailRedirectTo: "https://tiuliina.github.io/job-tracker/" }
       });
       msg(error ? ("Error: " + error.message) : "Check your email ✉️");
     };
