@@ -33,38 +33,38 @@ function toUpsertPayload(j) {
   };
 }
 
-// --- API: hae jobit backendistä ---
-export async function listJobs() {
-  const res = await fetch(`${API_BASE}/jobs`);
-  if (!res.ok) throw new Error(`GET /jobs failed: ${res.status}`);
-  const rows = await res.json();
+import { supabase } from "./supabaseClient.js";
 
-  // Muunna backend-rivit vanhaan UI-muotoon
-  const jobs = (rows || []).map(r => ({
-    // UI usein käyttää id:tä keynä -> pidä se URL:na kuten ennen
-    id: r.url,
+export async function listJobs() {
+  // Hae uusimmat ensin. Voit lisätä pagination myöhemmin.
+  const { data: userRes } = await supabase.auth.getUser();
+const user = userRes?.user;
+if (!user) return { jobs: [], byId: {} };
+  const { data, error } = await supabase
+    .from("jobs")
+    .select("user_id,url,title,company,location,body_text,desc_hash,duplicate_of,updated_at,created_at")
+    .order("updated_at", { ascending: false })
+    .limit(500)
+    .eq("user_id", user.id);
+
+  if (error) throw error;
+
+  const jobs = (data || []).map(r => ({
+    id: r.url,                 // appisi käyttää id:tä -> käytetään url:ia id:nä
     url: r.url,
     title: r.title,
-
-    // jos backend ei vielä palauta näitä, jätetään tyhjäksi
-    company: r.company_name ?? r.company ?? "",
-    location: r.location ?? "",
-    savedAt: r.savedAt ?? r.first_seen_at ?? r.created_at ?? "",
-
-    duplicateOf: r.duplicateOf ?? null,
-
-    // hyödyllisiä UI:lle
-    status: r.status,
-    is_read: !!r.is_read,
-
-    // jos joskus tarvitset DB:n numerollista id:tä:
-    dbId: r.id,
+    company: r.company,
+    location: r.location,
+    bodyText: r.body_text,     // muunnos appin käyttämään nimeen
+    descHash: r.desc_hash,
+    duplicateOf: r.duplicate_of || null,
+    updatedAt: r.updated_at,
+    createdAt: r.created_at,
+    userId: r.user_id,
   }));
 
   const byId = Object.fromEntries(jobs.map(j => [j.id, j]));
-  jobs.sort((a, b) => (b.savedAt || "").localeCompare(a.savedAt || ""));
-
-  return { byId, jobs };
+  return { jobs, byId };
 }
 
 // --- API: upserttaa monta (ottaa joko arrayn tai sun vanhan {id:job} objektin) ---
