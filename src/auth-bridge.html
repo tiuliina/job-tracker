@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Auth bridge</title>
+</head>
+<body style="font-family:system-ui;padding:16px">
+  <h3>Yhdistä Supabase</h3>
+  <input id="email" placeholder="email" style="padding:8px;width:280px" />
+  <button id="login" style="padding:8px 12px">Send login link</button>
+  <div id="msg" style="margin-top:12px"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://zbnpdljtffddfymhxumx.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpibnBkbGp0ZmZkZGZ5bWh4dW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwMzIxNDAsImV4cCI6MjA4MTYwODE0MH0.4LThsV6kp_CI9m7zlxORFHPW5IANiPLtR1O_TkrXmdE";
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const msg = (t) => document.getElementById("msg").textContent = t;
+
+    function parseHash() {
+      const h = location.hash.startsWith("#") ? location.hash.slice(1) : location.hash;
+      const p = new URLSearchParams(h);
+      return { access_token: p.get("access_token"), refresh_token: p.get("refresh_token") };
+    }
+
+    async function sendSessionToOpener() {
+      const { access_token, refresh_token } = parseHash();
+      if (access_token && refresh_token) {
+        await client.auth.setSession({ access_token, refresh_token });
+        history.replaceState(null, "", location.pathname);
+      }
+
+      const { data } = await client.auth.getSession();
+      const s = data?.session;
+      if (!s) { msg("Ei sessiota vielä. Lähetä login-linkki."); return; }
+
+      const payload = {
+        type: "JT_SUPABASE_SESSION",
+        access_token: s.access_token,
+        user_id: s.user.id,
+        expires_at: s.expires_at
+      };
+
+      if (window.opener) {
+        window.opener.postMessage(payload, "*");
+        msg("Sessio lähetetty ✅ Voit sulkea tämän välilehden.");
+      } else {
+        msg("Avaa tämä bookmarkletin kautta (tarvitsee opener-ikkunan).");
+      }
+    }
+
+    document.getElementById("login").onclick = async () => {
+      const email = document.getElementById("email").value.trim();
+      msg("Sending link…");
+      const { error } = await client.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: location.origin + location.pathname }
+      });
+      msg(error ? ("Error: " + error.message) : "Check your email ✉️");
+    };
+
+    sendSessionToOpener();
+  </script>
+</body>
+</html>
