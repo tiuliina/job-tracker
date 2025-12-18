@@ -15,7 +15,7 @@
     document.getElementById("login").onclick = async () => {
       const email = document.getElementById("email").value;
       const { error } = await supabase.auth.signInWithOtp({ email, options: {
-        emailRedirectTo: "https://tiuliina.github.io/job-tracker/src/login_page.html"
+        emailRedirectTo: "https://tiuliina.github.io/job-tracker"
       } });
       alert(error ? error.message : "Check your email");
     };
