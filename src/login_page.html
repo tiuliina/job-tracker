@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<body>
+  <input id="email" placeholder="email" />
+  <button id="login">Send login link</button>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js";
+
+    const supabase = createClient(
+        "https://zbnpdljtffddfymhxumx.supabase.co/",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpibnBkbGp0ZmZkZGZ5bWh4dW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwMzIxNDAsImV4cCI6MjA4MTYwODE0MH0.4LThsV6kp_CI9m7zlxORFHPW5IANiPLtR1O_TkrXmdE"      
+    );
+
+    document.getElementById("login").onclick = async () => {
+      const email = document.getElementById("email").value;
+      const { error } = await supabase.auth.signInWithOtp({ email, options: {
+        emailRedirectTo: "https://tiuliina.github.io/job-tracker/src/login_page.html"
+      } });
+      alert(error ? error.message : "Check your email");
+    };
+  </script>
+</body>
+</html>
