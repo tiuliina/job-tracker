@@ -1,6 +1,8 @@
 import { listJobs, exportJson, upsertMany } from "./db.js";
 import { supabase } from "./supabaseClient.js";
 
+document.body.insertAdjacentHTML("afterbegin", "<div style='padding:6px;border:1px solid #ddd'>ui.js v12</div>");
+
 export function renderApp(root) {
   root.innerHTML = `
     <div class="topbar">
