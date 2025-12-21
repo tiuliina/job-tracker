@@ -61,11 +61,21 @@ async function renderHome(view) {
 
     <button id="jt-gen-key" type="button">Luo bookmarklet-avain</button>
     <pre id="jt-key-out"></pre>
+    <div>
+    <textarea id="cv-field"></textarea>
+    <button id="send-cv">Lähetä CV</button>
+    </div>
   `;
 
   // ⚠️ TÄRKEÄ: kiinnitä click handler vasta innerHTML:n jälkeen
   const btn = view.querySelector("#jt-gen-key");
   if (btn) btn.onclick = () => generateBookmarkletKey(view); // tämä funktio pitää olla olemassa
+  const cv_btn = view.querySelector("#send-cv");
+  if (btn) btn.onclick = () => sendCVToOpenAI();
+}
+
+function sendCVToOpenAI() {
+  alert("works");
 }
 
 async function sha256Hex(str) {
