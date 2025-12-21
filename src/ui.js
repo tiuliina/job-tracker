@@ -1,4 +1,4 @@
-import { listJobs, exportJson, upsertMany } from "./db.js";
+import { listJobs, exportJson, upsertMany, saveCv } from "./db.js";
 import { supabase } from "./supabaseClient.js";
 
 document.body.insertAdjacentHTML("afterbegin", "<div style='padding:6px;border:1px solid #ddd'>ui.js v12</div>");
@@ -70,12 +70,15 @@ async function renderHome(view) {
   // ⚠️ TÄRKEÄ: kiinnitä click handler vasta innerHTML:n jälkeen
   const btn = view.querySelector("#jt-gen-key");
   if (btn) btn.onclick = () => generateBookmarkletKey(view); // tämä funktio pitää olla olemassa
-  const cv_btn = view.querySelector("#send-cv");
-  if (btn) btn.onclick = () => sendCVToOpenAI();
-}
-
-function sendCVToOpenAI() {
-  alert("works");
+  document.querySelector("#saveCvBtn").addEventListener("click", async () => {
+  const cvText = document.querySelector("#cvTextarea").value;
+  try {
+    await saveCv(cvText);
+    alert("✅ CV tallennettu");
+  } catch (e) {
+    alert("❌ Tallennus epäonnistui: " + e.message);
+  }
+});
 }
 
 async function sha256Hex(str) {
