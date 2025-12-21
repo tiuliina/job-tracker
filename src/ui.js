@@ -70,8 +70,8 @@ async function renderHome(view) {
   // ⚠️ TÄRKEÄ: kiinnitä click handler vasta innerHTML:n jälkeen
   const btn = view.querySelector("#jt-gen-key");
   if (btn) btn.onclick = () => generateBookmarkletKey(view); // tämä funktio pitää olla olemassa
-  document.querySelector("#saveCvBtn").addEventListener("click", async () => {
-  const cvText = document.querySelector("#cvTextarea").value;
+  document.querySelector("#send-cv").addEventListener("click", async () => {
+  const cvText = document.querySelector("#cv-field").value;
   try {
     await saveCv(cvText);
     alert("✅ CV tallennettu");
