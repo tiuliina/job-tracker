@@ -26,7 +26,6 @@ function toUpsertPayload(j) {
     url: j?.url,
     title: j?.title,
     company_name: j?.company,
-    location: j?.location,
     bodyText: j?.bodyText,
     descHash: j?.descHash,
     savedAt: j?.savedAt,
@@ -42,7 +41,7 @@ const user = userRes?.user;
 if (!user) return { jobs: [], byId: {} };
   const { data, error } = await supabase
     .from("jobs")
-    .select("user_id,url,title,company,location,body_text,desc_hash,updated_at,created_at")
+    .select("user_id,url,title,company,body_text,desc_hash,updated_at,created_at")
     .order("updated_at", { ascending: false })
     .limit(500)
     .eq("user_id", user.id);
@@ -54,7 +53,6 @@ if (!user) return { jobs: [], byId: {} };
     url: r.url,
     title: r.title,
     company: r.company,
-    location: r.location,
     bodyText: r.body_text,     // muunnos appin käyttämään nimeen
     descHash: r.desc_hash,
     duplicateOf: null,
