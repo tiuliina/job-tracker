@@ -34,6 +34,25 @@ function toUpsertPayload(j) {
 
 import { supabase } from "./supabaseClient.js";
 
+export async function saveCv(cvText) {
+  const { data: { user }, error: userErr } = await supabase.auth.getUser();
+  if (userErr) throw userErr;
+  if (!user) throw new Error("Not logged in");
+
+  const { error } = await supabase
+    .from("user_profiles")
+    .upsert(
+      {
+        user_id: user.id,
+        cv_text: cvText,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id" }
+    );
+
+  if (error) throw error;
+}
+
 export async function listJobs() {
   // Hae uusimmat ensin. Voit lisätä pagination myöhemmin.
   const { data: userRes } = await supabase.auth.getUser();
