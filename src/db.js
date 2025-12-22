@@ -78,6 +78,9 @@ if (!user) return { jobs: [], byId: {} };
     updatedAt: r.updated_at,
     createdAt: r.created_at,
     userId: r.user_id,
+    published_at: r.published_at,
+    deadline: r.deadline,
+    status: r.status
   }));
 
   const byId = Object.fromEntries(jobs.map(j => [j.id, j]));
