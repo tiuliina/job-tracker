@@ -199,7 +199,7 @@ ${e?.stack || ""}
           <div>
             <div style="font-weight:800">${escapeHtml(j.title||"(ei otsikkoa)")}</div>
             <div class="meta">${escapeHtml(j.company||"")}, 
-            hakuaika: ${escapeHtml(j.published||"")}-${escapeHtml(j.deadline||"")},
+            hakuaika: ${escapeHtml(j.published_at||"")}-${escapeHtml(j.deadline||"")},
             status: ${escapeHtml(j.status||"")}
             </div>
           </div>
