@@ -198,7 +198,10 @@ ${e?.stack || ""}
         <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start;">
           <div>
             <div style="font-weight:800">${escapeHtml(j.title||"(ei otsikkoa)")}</div>
-            <div class="meta">${escapeHtml(j.company||"")}${j.location?` – ${escapeHtml(j.location)}`:""}</div>
+            <div class="meta">${escapeHtml(j.company||"")}, 
+            hakuaika: ${escapeHtml(j.published||"")}-${escapeHtml(j.deadline||"")},
+            status: ${escapeHtml(j.status||"")}
+            </div>
           </div>
           ${badge}
         </div>
