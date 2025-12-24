@@ -60,7 +60,7 @@ const user = userRes?.user;
 if (!user) return { jobs: [], byId: {} };
   const { data, error } = await supabase
     .from("jobs")
-    .select("user_id,url,title,company,body_text,desc_hash,updated_at,created_at")
+    .select("user_id,url,title,company,body_text,desc_hash,updated_at,created_at, status, published_at, deadline, level")
     .order("updated_at", { ascending: false })
     .limit(500)
     .eq("user_id", user.id);
@@ -80,7 +80,8 @@ if (!user) return { jobs: [], byId: {} };
     userId: r.user_id,
     published_at: r.published_at,
     deadline: r.deadline,
-    status: r.status
+    status: r.status,
+    level: r.level
   }));
 
   const byId = Object.fromEntries(jobs.map(j => [j.id, j]));
