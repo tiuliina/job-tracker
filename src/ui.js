@@ -191,8 +191,13 @@ ${e?.stack || ""}
 
   const list = view.querySelector("#list");
   list.innerHTML = jobs.map(j => {
-    const badge = j.duplicateOf ? `<span class="badge dup">DUP</span>`
-                : `<span class="badge saved">TALLENNETTU</span>`;
+    if (j.status == "jono") {
+      const badge = `<span class="badge queue">JONO</span>`;
+    }
+    else {
+      const badge = j.duplicateOf ? `<span class="badge dup">DUP</span>`
+                  : `<span class="badge saved">TALLENNETTU</span>`;
+    }
     return `
       <div class="card" data-id="${escapeAttr(j.id)}">
         <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start;">
