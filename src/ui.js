@@ -191,6 +191,7 @@ ${e?.stack || ""}
 
   const list = view.querySelector("#list");
   list.innerHTML = jobs.map(j => {
+    alert(j)
     if (j.status == "jono") {
       const badge = `<span class="badge queue">JONO</span>`;
     }
