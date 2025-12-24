@@ -170,6 +170,7 @@ async function renderLoad(view, setRoute) {
 }
 
 async function renderJobs(view, modalHost) {
+  alert("a");
   let byId = {}, jobs = [];
   try {
     const res = await listJobs();
@@ -178,6 +179,7 @@ async function renderJobs(view, modalHost) {
   } catch (e) {
     view.innerHTML = `<pre style="white-space:pre-wrap">
 listJobs() kaatui:
+alert(e);
 ${e?.message || e}
 ${e?.stack || ""}
 </pre>`;
