@@ -22,6 +22,7 @@ a { color: inherit; }
 .badge{ display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:700; }
 .badge.new{ background:#c62828; color:#fff; }
 .badge.saved{ background:#2e7d32; color:#fff; }
+.badge.queue{ background:#FF69B4; color: #fff;}
 .badge.dup{ background:#fff; border:1px dashed #000; }
 
 .modalOverlay{
