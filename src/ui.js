@@ -170,7 +170,6 @@ async function renderLoad(view, setRoute) {
 }
 
 async function renderJobs(view, modalHost) {
-  alert("a");
   let byId = {}, jobs = [];
   try {
     const res = await listJobs();
@@ -179,7 +178,6 @@ async function renderJobs(view, modalHost) {
   } catch (e) {
     view.innerHTML = `<pre style="white-space:pre-wrap">
 listJobs() kaatui:
-alert(e);
 ${e?.message || e}
 ${e?.stack || ""}
 </pre>`;
@@ -193,12 +191,12 @@ ${e?.stack || ""}
 
   const list = view.querySelector("#list");
   list.innerHTML = jobs.map(j => {
-    alert(j)
+    let badge = "";
     if (j.status == "jono") {
-      const badge = `<span class="badge queue">JONO</span>`;
+      badge = `<span class="badge queue">JONO</span>`;
     }
     else {
-      const badge = j.duplicateOf ? `<span class="badge dup">DUP</span>`
+     badge = j.duplicateOf ? `<span class="badge dup">DUP</span>`
                   : `<span class="badge saved">TALLENNETTU</span>`;
     }
     return `
