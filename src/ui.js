@@ -1,5 +1,6 @@
 import { listJobs, exportJson, upsertMany, saveCv } from "./db.js";
 import { supabase } from "./supabaseClient.js";
+import { openModal } from "./jobCardModal.js";
 
 document.body.insertAdjacentHTML("afterbegin", "<div style='padding:6px;border:1px solid #ddd'>ui.js v12</div>");
 
@@ -218,43 +219,6 @@ ${e?.stack || ""}
   list.querySelectorAll("[data-id]").forEach(el => {
     el.onclick = () => openModal(modalHost, byId[el.dataset.id], byId);
   });
-}
-
-function openModal(host, job, byIdObj) {
-  if (!job) return;
-  const orig = job.duplicateOf ? byIdObj[job.duplicateOf] : null;
-
-  host.innerHTML = `
-    <div class="modalOverlay" id="overlay">
-      <div class="modal" role="dialog" aria-modal="true">
-        <div class="modalHeader">
-          <div class="modalTitle">${escapeHtml(job.title || "")}</div>
-          <button class="closeBtn" id="close">✕</button>
-        </div>
-        <div class="modalBody">
-          <div class="meta">${escapeHtml(job.company||"")}${job.location?` – ${escapeHtml(job.location)}`:""}</div>
-          <div class="linkrow">
-            ${job.url ? `<a href="${escapeAttr(job.url)}" target="_blank">Avaa Duunitori</a>` : ``}
-            ${job.applyUrlRaw ? `<a href="${escapeAttr(job.applyUrlRaw)}" target="_blank">Avaa hakulinkki</a>` : ``}
-            ${orig ? `<a href="#" id="openOrig">Avaa alkuperäinen</a>` : ``}
-          </div>
-          ${orig ? `<div class="badge dup">Duplikaatti → ${escapeHtml(orig.title||"")}</div>` : ``}
-          <h3>Leipäteksti</h3>
-          <pre id="body"></pre>
-        </div>
-      </div>
-    </div>
-  `;
-
-  const overlay = host.querySelector("#overlay");
-  host.querySelector("#close").onclick = () => (host.innerHTML = "");
-  overlay.onclick = (e) => { if (e.target === overlay) host.innerHTML = ""; };
-
-  const pre = host.querySelector("#body");
-  pre.textContent = job.bodyText || "";
-
-  const openOrig = host.querySelector("#openOrig");
-  if (openOrig) openOrig.onclick = (e) => { e.preventDefault(); openModal(host, orig, byIdObj); };
 }
 
 // helpers
