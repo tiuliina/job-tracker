@@ -79,7 +79,7 @@ if (!user) return { jobs: [], byId: {} };
     .eq("user_id", user.id);
 
   if (error) throw error;
-  const data = jobs;
+  const jobs = data || [];
 
   const byId = Object.fromEntries(jobs.map(j => [j.id, j]));
   return { jobs, byId };
