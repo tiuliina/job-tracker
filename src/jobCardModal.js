@@ -97,7 +97,6 @@ export function openModal(host, job, byIdObj) {
   if (!job) return;
 
   const orig = job.duplicate_of ? (byIdObj ? byIdObj[job.duplicate_of] : null) : null;
-  alert("3 UUSI");
 
   host.innerHTML = `
     <div class="modalOverlay" id="overlay">
@@ -127,25 +126,17 @@ export function openModal(host, job, byIdObj) {
       </div>
     </div>
   `;
-  alert("4");
 
   const overlay = host.querySelector("#overlay");
-  alert("5");
   const close = () => (host.innerHTML = "");
-  alert("6");
 
   host.querySelector("#close").onclick = close;
-  alert("7");
   overlay.onclick = (e) => { if (e.target === overlay) close(); };
-  alert("8");
 
   const openOrig = host.querySelector("#openOrig");
-  alert("9");
   if (openOrig) openOrig.onclick = (e) => { e.preventDefault(); openModal(host, orig, byIdObj); };
-  alert("10");
 
   const saveStatus = host.querySelector("#saveStatus");
-  alert("11");
   host.querySelector("#saveBtn").onclick = async () => {
     try {
       saveStatus.textContent = "Tallennetaan…";
@@ -166,7 +157,6 @@ export function openModal(host, job, byIdObj) {
       saveStatus.textContent = "Tallennus epäonnistui";
     }
   };
-  alert("12");
 }
 
 function escapeHtml(s){
