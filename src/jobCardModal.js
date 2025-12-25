@@ -97,7 +97,7 @@ export function openModal(host, job, byIdObj) {
   if (!job) return;
 
   const orig = job.duplicate_of ? (byIdObj ? byIdObj[job.duplicate_of] : null) : null;
-  alert("3");
+  alert("3 UUSI");
 
   host.innerHTML = `
     <div class="modalOverlay" id="overlay">
