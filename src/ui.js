@@ -44,8 +44,8 @@ async function renderHome(view) {
     jobs = [];
   }
 
-  const saved = jobs.filter(j => j && !j.duplicateOf).length;
-  const dup   = jobs.filter(j => j &&  j.duplicateOf).length;
+  const saved = jobs.filter(j => j && !j.duplicate_of).length;
+  const dup   = jobs.filter(j => j &&  j.duplicate_of).length;
 
   view.innerHTML = `
     <h2 style="margin:0 0 10px 0">Tilastot</h2>
@@ -197,7 +197,7 @@ ${e?.stack || ""}
       badge = `<span class="badge queue">JONO</span>`;
     }
     else {
-     badge = j.duplicateOf ? `<span class="badge dup">DUP</span>`
+     badge = j.duplicate_of ? `<span class="badge dup">DUP</span>`
                   : `<span class="badge saved">TALLENNETTU</span>`;
     }
     return `
