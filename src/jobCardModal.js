@@ -94,9 +94,7 @@ function readFormPatch(modalEl) {
 }
 
 export function openModal(host, job, byIdObj) {
-  alert("1");
   if (!job) return;
-  alert("2");
 
   const orig = job.duplicate_of ? (byIdObj ? byIdObj[job.duplicate_of] : null) : null;
   alert("3");
@@ -115,7 +113,6 @@ export function openModal(host, job, byIdObj) {
         <div class="modalBody">
           <div class="linkrow">
             ${job.url ? `<a href="${escapeAttr(job.url)}" target="_blank" rel="noopener">Avaa Duunitori</a>` : ``}
-            ${job.applyUrlRaw ? `<a href="${escapeAttr(job.applyUrlRaw)}" target="_blank" rel="noopener">Avaa hakulinkki</a>` : ``}
             ${orig ? `<a href="#" id="openOrig">Avaa alkuperäinen</a>` : ``}
           </div>
 
