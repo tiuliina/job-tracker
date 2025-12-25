@@ -7,7 +7,7 @@ document.body.insertAdjacentHTML("afterbegin", "<div style='padding:6px;border:1
 export function renderApp(root) {
   root.innerHTML = `
     <div class="topbar">
-      <div class="brand">Työnhaku</div>
+      <div class="brand">Työnhaku 1.0</div>
       <button class="navbtn" data-route="home">Etusivu</button>
       <button class="navbtn" data-route="load">Lataa työpaikkoja</button>
       <button class="navbtn" data-route="jobs">Lista työpaikoista</button>
