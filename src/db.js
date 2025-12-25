@@ -73,29 +73,13 @@ const user = userRes?.user;
 if (!user) return { jobs: [], byId: {} };
   const { data, error } = await supabase
     .from("jobs")
-    .select("user_id,url,title,company,body_text,desc_hash,updated_at,created_at, status, published_at, deadline, level")
+    .select("*")
     .order("updated_at", { ascending: false })
     .limit(500)
     .eq("user_id", user.id);
 
   if (error) throw error;
-
-  const jobs = (data || []).map(r => ({
-    id: r.url,                 // appisi käyttää id:tä -> käytetään url:ia id:nä
-    url: r.url,
-    title: r.title,
-    company: r.company,
-    bodyText: r.body_text,     // muunnos appin käyttämään nimeen
-    descHash: r.desc_hash,
-    duplicateOf: null,
-    updatedAt: r.updated_at,
-    createdAt: r.created_at,
-    userId: r.user_id,
-    published_at: r.published_at,
-    deadline: r.deadline,
-    status: r.status,
-    level: r.level
-  }));
+  const data = jobs;
 
   const byId = Object.fromEntries(jobs.map(j => [j.id, j]));
   return { jobs, byId };
