@@ -16,14 +16,14 @@ export const JOB_FIELDS = [
   { key: "language", label: "language", type: "select", options: ["fi", "en", "sv", "other", ""] },
 
   { key: "status", label: "status", type: "select", options: [
-      "", "new", "saved", "applied", "interview", "offer", "rejected", "archived"
+      "", "jono", "käynnissä", "ei_aloitettu", "karsittu", "poistettu", "valmis", "haastattelu"
     ]
   },
 
   { key: "level", label: "level", type: "select", options: ["", "junior", "mid", "senior", "lead", ""] },
 
-  { key: "priority", label: "priority", type: "select", options: ["", "1", "2", "3", "4", "5"] },
-  { key: "urgency", label: "urgency", type: "select", options: ["", "low", "medium", "high"] },
+  { key: "priority", label: "priority", type: "select", options: ["", "1", "2", "3"] },
+  { key: "urgency", label: "urgency", type: "select", options: ["", "1", "2", "3"] },
 
   { key: "requirements", label: "requirements", type: "textarea" },
   { key: "requirements_score", label: "requirements_score", type: "number" },
