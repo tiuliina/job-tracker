@@ -54,3 +54,54 @@ pre#body{ white-space: pre-wrap; overflow-wrap:anywhere; word-break:break-word; 
 .kpi .num{ font-size:24px; font-weight:900; }
 .small{ opacity:.75; font-size: 13px; }
 textarea{ width:100%; min-height: 180px; }
+
+.notionModal .props {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.propRow {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.propKey {
+  opacity: 0.7;
+  font-size: 13px;
+}
+
+.propVal .propInput, .propVal select, .propVal textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.propTextarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.propTextarea.large {
+  min-height: 260px;
+}
+
+.modalHeaderRight {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn {
+  padding: 6px 10px;
+}
+
+.saveStatus {
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: 0.8;
+}
