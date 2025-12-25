@@ -53,6 +53,19 @@ export async function saveCv(cvText) {
   if (error) throw error;
 }
 
+export async function updateJob(id, patch) {
+  // supabaseClient tms. pitäisi olla jo sulla
+  const { data, error } = await supabase
+    .from("jobs")
+    .update(patch)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
 export async function listJobs() {
   // Hae uusimmat ensin. Voit lisätä pagination myöhemmin.
   const { data: userRes } = await supabase.auth.getUser();
