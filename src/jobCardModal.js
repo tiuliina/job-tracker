@@ -168,3 +168,10 @@ export function openModal(host, job, byIdObj) {
   };
   alert("12");
 }
+
+function escapeHtml(s){
+  return (""+(s??"")).replace(/[&<>"']/g,m=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[m]));
+}
+function escapeAttr(s){ return escapeHtml(s).replace(/`/g,""); }
